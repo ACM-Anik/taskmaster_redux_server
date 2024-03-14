@@ -22,13 +22,23 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const db = await client.db('taskmaster');
+    const db = await client.db('taskmaster_redux');
     const tasksCollection = db.collection('tasks');
 
     console.log('Successfully connected to MongoDB!');
 
     app.get('/', (req, res) => {
       res.send('Task Master Server');
+    });
+
+    app.get('/tasks', async (req, res) => {
+      try {
+        const tasks = await tasksCollection.find({}).toArray();
+        res.json(tasks);
+      } catch (err) {
+        console.error('Error fetching tasks:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     });
 
    
