@@ -41,6 +41,18 @@ async function run() {
       }
     });
 
+    app.post('/tasks', async (req, res) => {
+      const newTask = req.body;
+
+      try {
+        const result = await tasksCollection.insertOne(newTask);
+        res.status(201).json(result);
+      } catch (err) {
+        console.error('Error creating task:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
+
    
   } finally {
   }
