@@ -8,9 +8,9 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-const uri = "mongodb+srv://taskmaster_redux:TeffZWBBpqaxdrIX@cluster0.vxma4ez.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// const uri = process.env.DATABASE_URI;
+const uri = process.env.DATABASE_URI;
+// console.log(uri);
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
