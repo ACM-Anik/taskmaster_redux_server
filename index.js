@@ -55,15 +55,16 @@ async function run() {
 
     app.delete('/tasks/:id', async (req, res) => {
       const taskId = req.params.id;
-
+      
       try {
         const result = await tasksCollection.deleteOne({
-          _id: ObjectId(taskId),
+          _id: new ObjectId(taskId),
         });
+
         if (result.deletedCount === 0) {
-          res.status(404).json({ error: 'Task not found' });
+          res.status(404).json({ error: 'Task not found!' });
         } else {
-          res.json({ message: 'Task deleted successfully' });
+          res.json({ message: 'Task deleted successfully!' });
         }
       } catch (err) {
         console.error('Error deleting task:', err);
@@ -74,7 +75,7 @@ async function run() {
     app.patch('/tasks/:id', async (req, res) => {
       const taskId = req.params.id;
       const updatedTaskData = req.body;
-
+      console.log(updatedTaskData);
       try {
         const result = await tasksCollection.updateOne(
           { _id: new ObjectId(taskId) },
@@ -93,8 +94,7 @@ async function run() {
     });
 
    
-  } finally {
-  }
+  } finally {}
 }
 run().catch(console.dir);
 
