@@ -24,6 +24,7 @@ async function run() {
     await client.connect();
     const db = await client.db('taskmaster_redux');
     const tasksCollection = db.collection('tasks');
+    const usersCollection = db.collection('users');
 
     console.log('Successfully connected to MongoDB!');
 
@@ -93,6 +94,27 @@ async function run() {
       }
     });
 
+    // Users/Members:--
+    app.get('/users', async (req, res) => {
+      try {
+        const users = await usersCollection.find({}).toArray();
+        res.json(users);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
+
+    app.post('/users', async (req, res) => {
+      const newUser = req.body;
+      try {
+        const result = await usersCollection.insertOne(newUser);
+        res.status(201).json(result);
+      } catch (err) {
+        console.error('Error creating user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
    
   } finally {}
 }
