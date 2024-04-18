@@ -136,6 +136,22 @@ async function run() {
         res.status(500).json({ error: 'Internal Server Error' });
       }
     });
+
+    app.delete("/users/:id", async (req, res) => {
+      const userId = req.body;
+      try {
+        const result = await usersCollection.deleteOne({ _id: ObjectId(userId)});
+
+        if (result.deletedCount === 0) {
+          res.status(404).json({ error: 'User not found!' });
+        } else {
+          res.json({ message: 'User deleted successfully!' });
+        }
+      } catch (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
    
   } finally {}
 }
