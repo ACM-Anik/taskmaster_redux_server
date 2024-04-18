@@ -76,7 +76,7 @@ async function run() {
     app.patch('/tasks/:id', async (req, res) => {
       const taskId = req.params.id;
       const updatedTaskData = req.body;
-      console.log(updatedTaskData);
+
       try {
         const result = await tasksCollection.updateOne(
           { _id: new ObjectId(taskId) },
@@ -112,6 +112,27 @@ async function run() {
         res.status(201).json(result);
       } catch (err) {
         console.error('Error creating user:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
+
+    app.patch('/users/:id', async (req, res) => {
+      const userId = req.params.id;
+      const updatedUserData = req.body;
+
+      try {
+        const result = await usersCollection.updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: updatedUserData }
+        );
+
+        if (result.matchedCount === 0) {
+          res.status(404).json({ error: 'user not found' });
+        } else {
+          res.json({ message: 'user updated successfully' });
+        }
+      } catch (err) {
+        console.error('Error updating user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
       }
     });
