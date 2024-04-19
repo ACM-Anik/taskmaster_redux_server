@@ -140,7 +140,7 @@ async function run() {
     app.delete("/users/:id", async (req, res) => {
       const userId = req.params.id;
       try {
-        const result = await usersCollection.deleteOne({ _id: ObjectId(userId)});
+        const result = await usersCollection.deleteOne({ _id: new ObjectId(userId)});
 
         if (result.deletedCount === 0) {
           res.status(404).json({ error: 'User not found!' });
