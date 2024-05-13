@@ -108,19 +108,14 @@ async function run() {
     app.post('/users', async (req, res) => {
       const newUser = req.body;
       const email = newUser.email;
-      console.log('email=', email);
 
       try {
         const emailArray = await usersCollection.find({ email: email }).toArray();
-        console.log('emailArray=', emailArray);
-        console.log('emailArray.email=', emailArray.email);
-        const emailFinding = emailArray.email;
 
-        if (emailFinding) {
-          return res.status(500).json({ error: 'Users already exists!' });
-        }else{
+        if (emailArray && emailArray[0]?.email) {
+          return res.status(500).json({ error: 'User already exists!' });
+        } else {
           const result = await usersCollection.insertOne(newUser);
-          console.log('else=======');
           res.status(201).json(result);
         }
       } catch (err) {
