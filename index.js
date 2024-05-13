@@ -56,7 +56,7 @@ async function run() {
 
     app.delete('/tasks/:id', async (req, res) => {
       const taskId = req.params.id;
-      
+
       try {
         const result = await tasksCollection.deleteOne({
           _id: new ObjectId(taskId),
@@ -107,9 +107,22 @@ async function run() {
 
     app.post('/users', async (req, res) => {
       const newUser = req.body;
+      const email = newUser.email;
+      console.log('email=', email);
+
       try {
-        const result = await usersCollection.insertOne(newUser);
-        res.status(201).json(result);
+        const emailArray = await usersCollection.find({ email: email }).toArray();
+        console.log('emailArray=', emailArray);
+        console.log('emailArray.email=', emailArray.email);
+        const emailFinding = emailArray.email;
+
+        if (emailFinding) {
+          return res.status(500).json({ error: 'Users already exists!' });
+        }else{
+          const result = await usersCollection.insertOne(newUser);
+          console.log('else=======');
+          res.status(201).json(result);
+        }
       } catch (err) {
         console.error('Error creating user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -140,7 +153,7 @@ async function run() {
     app.delete("/users/:id", async (req, res) => {
       const userId = req.params.id;
       try {
-        const result = await usersCollection.deleteOne({ _id: new ObjectId(userId)});
+        const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
 
         if (result.deletedCount === 0) {
           res.status(404).json({ error: 'User not found!' });
@@ -152,8 +165,8 @@ async function run() {
         res.status(500).json({ error: 'Internal Server Error' });
       }
     });
-   
-  } finally {}
+
+  } finally { }
 }
 run().catch(console.dir);
 
