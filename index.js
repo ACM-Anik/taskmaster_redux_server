@@ -29,7 +29,7 @@ async function run() {
     console.log('Successfully connected to MongoDB!');
 
     app.get('/', (req, res) => {
-      res.send('Task Master Server');
+      res.send('Task Master Server in running!');
     });
 
     app.get('/tasks', async (req, res) => {
@@ -161,7 +161,10 @@ async function run() {
       }
     });
 
-  } finally { }
+  } finally {
+    // Ensure the client will close when you finish/error
+    // await client.close();
+  }
 }
 run().catch(console.dir);
 
