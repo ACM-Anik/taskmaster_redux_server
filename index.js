@@ -162,7 +162,6 @@ async function run() {
     });
 
   } finally {
-    // Ensure the client will close when you finish/error
     // await client.close();
   }
 }
